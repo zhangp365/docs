@@ -1,0 +1,1246 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Video Service API",
+    "description": "视频生成服务 API - 提供多种AI视频生成、任务查询和历史记录功能",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8888",
+      "description": "开发环境"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Video Generation",
+      "description": "视频生成相关接口"
+    },
+    {
+      "name": "Task Management",
+      "description": "任务管理相关接口"
+    },
+    {
+      "name": "Query",
+      "description": "查询相关接口"
+    }
+  ],
+  "paths": {
+    "/v1/video/videogenerate": {
+      "post": {
+        "tags": [
+          "Video Generation"
+        ],
+        "summary": "通用视频生成",
+        "description": "支持多种AI模型生成视频，包括Doubao、MiniMax、Vidu、ViduV2、Veo3Vertex等",
+        "operationId": "videoGenerate",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prompt": {
+                    "type": "string",
+                    "description": "提示词，描述要生成的视频内容"
+                  },
+                  "source": {
+                    "type": "string",
+                    "description": "AI模型来源：1=DoubaoV1, 2=Doubao, 3=Vidu, 4=DoubaoV1, 5=ViduV2, 9/11=Doubao-SD-V1, 12=DoubSDV1-Abroad, 13=ViduV2-PPIO, 14=Veo3Vertex, 15=WanV21-PPIO, 16=Rep-Wan22-Fast",
+                    "enum": [
+                      "1",
+                      "2",
+                      "3",
+                      "4",
+                      "5",
+                      "9",
+                      "11",
+                      "12",
+                      "13",
+                      "14",
+                      "15",
+                      "16"
+                    ],
+                    "default": "4"
+                  },
+                  "ratio": {
+                    "type": "string",
+                    "description": "视频宽高比，如16:9、9:16、3:4、1:1",
+                    "example": "16:9"
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "description": "视频时长（秒），部分模型支持4/5/8/10秒"
+                  },
+                  "seed": {
+                    "type": "integer",
+                    "description": "随机种子，用于生成一致的结果"
+                  },
+                  "resolution": {
+                    "type": "string",
+                    "description": "视频分辨率，如720p、1080p",
+                    "example": "720p"
+                  },
+                  "fps": {
+                    "type": "string",
+                    "description": "帧率",
+                    "example": "24"
+                  },
+                  "sourceImage": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "源图片文件（部分模型需要1-2张图片）"
+                  },
+                  "imageUrl": {
+                    "type": "string",
+                    "description": "源图片URL，多个图片用逗号分隔"
+                  },
+                  "v2type": {
+                    "type": "string",
+                    "description": "ViduV2类型：image2video、template2video、startend2video",
+                    "enum": [
+                      "image2video",
+                      "template2video",
+                      "startend2video"
+                    ]
+                  },
+                  "template": {
+                    "type": "string",
+                    "description": "模板名称（template2video模式使用）"
+                  },
+                  "camerafixed": {
+                    "type": "string",
+                    "description": "固定相机，1为启用"
+                  },
+                  "enhancePrompt": {
+                    "type": "string",
+                    "description": "增强提示词，0为禁用，1为启用"
+                  },
+                  "negativePrompt": {
+                    "type": "string",
+                    "description": "负向提示词"
+                  },
+                  "model": {
+                    "type": "string",
+                    "description": "子模型名称"
+                  },
+                  "width": {
+                    "type": "integer",
+                    "description": "视频宽度"
+                  },
+                  "height": {
+                    "type": "integer",
+                    "description": "视频高度"
+                  },
+                  "steps": {
+                    "type": "integer",
+                    "description": "生成步数"
+                  },
+                  "guidanceScale": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "引导强度"
+                  },
+                  "flowShift": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "流偏移"
+                  },
+                  "enableSafetyChecker": {
+                    "type": "string",
+                    "description": "启用安全检查，1为启用"
+                  },
+                  "fastMode": {
+                    "type": "string",
+                    "description": "快速模式，1为启用"
+                  },
+                  "lora1": {
+                    "type": "string",
+                    "description": "LoRA1路径"
+                  },
+                  "lora2": {
+                    "type": "string",
+                    "description": "LoRA2路径"
+                  },
+                  "lora3": {
+                    "type": "string",
+                    "description": "LoRA3路径"
+                  },
+                  "scale1": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "LoRA1权重"
+                  },
+                  "scale2": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "LoRA2权重"
+                  },
+                  "scale3": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "LoRA3权重"
+                  },
+                  "disableSafetyChecker": {
+                    "type": "string",
+                    "description": "禁用安全检查，1为禁用"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "成功响应",
+                    "value": {
+                      "code": 1000,
+                      "msg": "Successfully",
+                      "data": {
+                        "taskid": "12345678_abc123def456"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "9000": {
+            "description": "积分不足",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/video/videogenbyscene": {
+      "post": {
+        "tags": [
+          "Video Generation"
+        ],
+        "summary": "按场景生成视频",
+        "description": "根据指定的场景分类ID生成视频，支持故事模式和场景模式",
+        "operationId": "videoGenByScene",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "categoryid"
+                ],
+                "properties": {
+                  "categoryid": {
+                    "type": "string",
+                    "description": "场景分类ID（必填）"
+                  },
+                  "region": {
+                    "type": "integer",
+                    "description": "区域：1=国外，2=国内",
+                    "enum": [
+                      1,
+                      2
+                    ],
+                    "default": 1
+                  },
+                  "resolution": {
+                    "type": "string",
+                    "description": "视频分辨率：720p或1080p",
+                    "enum": [
+                      "720p",
+                      "1080p"
+                    ],
+                    "default": "720p"
+                  },
+                  "gender": {
+                    "type": "integer",
+                    "description": "性别：1=男，2=女，3=男女混合",
+                    "enum": [
+                      1,
+                      2,
+                      3
+                    ],
+                    "default": 3
+                  },
+                  "sourceImage": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "源图片文件（1-2张）"
+                  },
+                  "imageUrl": {
+                    "type": "string",
+                    "description": "源图片URL，多个图片用逗号分隔"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/video/videogenbytpl": {
+      "post": {
+        "tags": [
+          "Video Generation"
+        ],
+        "summary": "按模板生成视频",
+        "description": "根据指定的模板分类ID生成视频",
+        "operationId": "videoGenByTpl",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "categoryid"
+                ],
+                "properties": {
+                  "categoryid": {
+                    "type": "string",
+                    "description": "模板分类ID（必填）"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "提示词（如果模板未配置）"
+                  },
+                  "seed": {
+                    "type": "integer",
+                    "description": "随机种子"
+                  },
+                  "sourceImage": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "源图片文件"
+                  },
+                  "imageUrl": {
+                    "type": "string",
+                    "description": "源图片URL"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/video/tlwangenerate": {
+      "post": {
+        "tags": [
+          "Video Generation"
+        ],
+        "summary": "TLWan视频生成",
+        "description": "使用TLWan22模型生成视频，支持LoRA和自定义分辨率",
+        "operationId": "tlwanGenerate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "prompt"
+                ],
+                "properties": {
+                  "prompt": {
+                    "type": "string",
+                    "description": "提示词（必填）"
+                  },
+                  "resolution": {
+                    "type": "string",
+                    "description": "视频分辨率：480p或720p",
+                    "enum": [
+                      "480p",
+                      "720p"
+                    ],
+                    "default": "720p"
+                  },
+                  "seed": {
+                    "type": "integer",
+                    "description": "随机种子"
+                  },
+                  "loras": {
+                    "type": "string",
+                    "description": "LoRA路径，多个用逗号分隔（最多6个）"
+                  },
+                  "loras_scale": {
+                    "type": "string",
+                    "description": "LoRA权重，多个用逗号分隔（最多6个）"
+                  },
+                  "sourceImage": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "源图片文件"
+                  },
+                  "imageUrl": {
+                    "type": "string",
+                    "description": "源图片URL"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/video/infobytaskid": {
+      "post": {
+        "tags": [
+          "Task Management"
+        ],
+        "summary": "根据任务ID查询信息",
+        "description": "查询视频处理任务的状态和结果。支持获取详细信息",
+        "operationId": "infoByTaskId",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "taskid"
+                ],
+                "properties": {
+                  "taskid": {
+                    "type": "string",
+                    "description": "任务ID"
+                  },
+                  "moreTaskInfo": {
+                    "type": "boolean",
+                    "description": "是否返回更多任务详细信息"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskInfoResponse"
+                },
+                "examples": {
+                  "completed": {
+                    "summary": "任务完成",
+                    "value": {
+                      "code": 1000,
+                      "msg": "OK",
+                      "data": {
+                        "taskid": "12345678_abc123",
+                        "url": [
+                          "https://example.com/video.mp4"
+                        ],
+                        "task_status": 3
+                      }
+                    }
+                  },
+                  "processing": {
+                    "summary": "处理中",
+                    "value": {
+                      "code": 1000,
+                      "msg": "OK",
+                      "data": {
+                        "taskid": "12345678_abc123",
+                        "url": [],
+                        "task_status": 2
+                      }
+                    }
+                  },
+                  "failed": {
+                    "summary": "任务失败",
+                    "value": {
+                      "code": 1000,
+                      "msg": "OK",
+                      "data": {
+                        "taskid": "12345678_abc123",
+                        "url": [],
+                        "task_status": 4,
+                        "message": "Generation failed"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "任务不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/video/deletevideotask": {
+      "post": {
+        "tags": [
+          "Task Management"
+        ],
+        "summary": "删除视频任务",
+        "description": "批量删除指定的视频任务",
+        "operationId": "deleteVideoTask",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteVideoTaskRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteVideoTaskResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "删除成功",
+                    "value": {
+                      "code": 1000,
+                      "msg": "Successfully",
+                      "data": {
+                        "status": "Success"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "missingTaskIds": {
+                    "summary": "缺少任务ID",
+                    "value": {
+                      "code": 9999,
+                      "msg": "Delete failed, error info: missing taskids parameter"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/video/getvideohistory": {
+      "post": {
+        "tags": [
+          "Query"
+        ],
+        "summary": "获取视频历史",
+        "description": "获取用户的视频生成历史记录，支持分页",
+        "operationId": "getVideoHistory",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {
+                    "type": "integer",
+                    "description": "页码，从1开始",
+                    "minimum": 1,
+                    "default": 1
+                  },
+                  "pagesize": {
+                    "type": "integer",
+                    "description": "每页数量",
+                    "minimum": 1,
+                    "default": 15
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoHistoryResponse"
+                },
+                "examples": {
+                  "withPaging": {
+                    "summary": "带分页",
+                    "value": {
+                      "code": 1000,
+                      "msg": "OK",
+                      "data": [
+                        {
+                          "taskid": "12345678_abc123",
+                          "starttime": "2026-01-30 12:00:00",
+                          "genvideourl": "https://example.com/video.mp4",
+                          "status": 3,
+                          "Resolution": "720p",
+                          "scenename": "场景名称"
+                        }
+                      ],
+                      "total": 100,
+                      "page": 1,
+                      "pagesize": 15,
+                      "total_pages": 7
+                    }
+                  },
+                  "withoutPaging": {
+                    "summary": "不带分页",
+                    "value": {
+                      "code": 1000,
+                      "msg": "OK",
+                      "data": []
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/video/getcategory": {
+      "get": {
+        "tags": [
+          "Query"
+        ],
+        "summary": "获取场景分类",
+        "description": "获取可用的视频生成场景分类列表",
+        "operationId": "getCategory",
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCategoryResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "成功响应",
+                    "value": {
+                      "code": 1000,
+                      "msg": "Successfully",
+                      "data": [
+                        {
+                          "categoryid": "cat001",
+                          "categoryname": "风景",
+                          "imagecount": 10,
+                          "region": [
+                            {
+                              "region": 1,
+                              "scenename": "sea_scene"
+                            },
+                            {
+                              "region": 2,
+                              "scenename": "mountain_scene"
+                            }
+                          ],
+                          "Resolution": [
+                            "720p",
+                            "1080p"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "无可用分类",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "noCategory": {
+                    "summary": "无可用分类",
+                    "value": {
+                      "code": 9999,
+                      "msg": "failure, please wait and try again, error info: error: no available category"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BaseResponse": {
+        "type": "object",
+        "description": "基础响应结构",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "响应状态码：1000=成功，9999=失败，9000=积分不足"
+          },
+          "msg": {
+            "type": "string",
+            "description": "响应消息"
+          }
+        },
+        "required": [
+          "code",
+          "msg"
+        ]
+      },
+      "GeneralData": {
+        "type": "object",
+        "description": "通用数据响应",
+        "properties": {
+          "taskid": {
+            "type": "string",
+            "description": "任务ID，用于后续查询任务状态"
+          }
+        },
+        "required": [
+          "taskid"
+        ]
+      },
+      "GeneralResponse": {
+        "type": "object",
+        "description": "通用响应",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/GeneralData"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        ]
+      },
+      "DeleteVideoTaskRequest": {
+        "type": "object",
+        "description": "删除视频任务请求",
+        "properties": {
+          "taskids": {
+            "type": "array",
+            "description": "要删除的任务ID列表",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "taskids"
+        ]
+      },
+      "DeleteVideoTaskData": {
+        "type": "object",
+        "description": "删除任务响应数据",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "删除状态：Success或Failed"
+          }
+        }
+      },
+      "DeleteVideoTaskResponse": {
+        "type": "object",
+        "description": "删除任务响应",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/DeleteVideoTaskData"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        ]
+      },
+      "RegionData": {
+        "type": "object",
+        "description": "区域数据",
+        "properties": {
+          "region": {
+            "type": "integer",
+            "description": "区域：1=国外，2=国内"
+          },
+          "scenename": {
+            "type": "string",
+            "description": "场景名称"
+          }
+        },
+        "required": [
+          "region",
+          "scenename"
+        ]
+      },
+      "Category": {
+        "type": "object",
+        "description": "场景分类",
+        "properties": {
+          "categoryid": {
+            "type": "string",
+            "description": "分类ID"
+          },
+          "categoryname": {
+            "type": "string",
+            "description": "分类名称"
+          },
+          "imagecount": {
+            "type": "integer",
+            "description": "图片数量"
+          },
+          "region": {
+            "type": "array",
+            "description": "区域列表",
+            "items": {
+              "$ref": "#/components/schemas/RegionData"
+            }
+          },
+          "Resolution": {
+            "type": "array",
+            "description": "支持的分辨率列表",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "categoryid",
+          "categoryname"
+        ]
+      },
+      "GetCategoryResponse": {
+        "type": "object",
+        "description": "获取分类响应",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "description": "分类列表",
+                "items": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        ]
+      },
+      "TaskInfoData": {
+        "type": "object",
+        "description": "任务信息数据",
+        "properties": {
+          "taskid": {
+            "type": "string",
+            "description": "任务ID"
+          },
+          "url": {
+            "type": "array",
+            "description": "生成的视频URL列表",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "task_status": {
+            "type": "integer",
+            "description": "任务状态：1=待处理，2=处理中，3=完成，4=失败，5=上传中",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "message": {
+            "type": "string",
+            "description": "错误消息（任务失败时）"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "提示词"
+          },
+          "imageurl": {
+            "type": "string",
+            "description": "源图片URL"
+          },
+          "resolution": {
+            "type": "string",
+            "description": "视频分辨率"
+          },
+          "fps": {
+            "type": "integer",
+            "description": "帧率"
+          },
+          "source": {
+            "type": "string",
+            "description": "AI模型来源"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "视频时长（秒）"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "随机种子"
+          },
+          "scenename": {
+            "type": "string",
+            "description": "场景名称"
+          },
+          "ratio": {
+            "type": "string",
+            "description": "宽高比"
+          },
+          "loras": {
+            "type": "string",
+            "description": "LoRA"
+          },
+          "loras_scale": {
+            "type": "string",
+            "description": "LoRA权重"
+          }
+        }
+      },
+      "TaskInfoRequest": {
+        "type": "object",
+        "description": "任务信息查询请求",
+        "properties": {
+          "taskid": {
+            "type": "string",
+            "description": "任务ID"
+          },
+          "moreTaskInfo": {
+            "type": "boolean",
+            "description": "是否返回更多任务详细信息"
+          }
+        },
+        "required": [
+          "taskid"
+        ]
+      },
+      "TaskInfoResponse": {
+        "type": "object",
+        "description": "任务信息响应",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/TaskInfoData"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        ]
+      },
+      "VideoInfoData": {
+        "type": "object",
+        "description": "视频信息数据",
+        "properties": {
+          "taskid": {
+            "type": "string",
+            "description": "任务ID"
+          },
+          "model": {
+            "type": "string",
+            "description": "AI模型"
+          },
+          "starttime": {
+            "type": "string",
+            "description": "开始时间",
+            "format": "date-time"
+          },
+          "genvideourl": {
+            "type": "string",
+            "description": "生成的视频URL",
+            "format": "uri"
+          },
+          "status": {
+            "type": "integer",
+            "description": "任务状态：1=排队中，2=处理中，3=完成，4=失败",
+            "enum": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "scenename": {
+            "type": "string",
+            "description": "场景名称"
+          },
+          "Duration": {
+            "type": "integer",
+            "description": "视频时长（秒）"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "随机种子"
+          },
+          "ratio": {
+            "type": "string",
+            "description": "宽高比"
+          },
+          "Resolution": {
+            "type": "string",
+            "description": "视频分辨率"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "提示词"
+          },
+          "imageurl": {
+            "type": "string",
+            "description": "源图片URL"
+          }
+        }
+      },
+      "VideoHistoryResponse": {
+        "type": "object",
+        "description": "视频历史响应",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "description": "视频信息列表",
+                "items": {
+                  "$ref": "#/components/schemas/VideoInfoData"
+                }
+              },
+              "total": {
+                "type": "integer",
+                "description": "总数（分页时返回）"
+              },
+              "total_pages": {
+                "type": "integer",
+                "description": "总页数（分页时返回）"
+              },
+              "page": {
+                "type": "integer",
+                "description": "当前页码（分页时返回）"
+              },
+              "pagesize": {
+                "type": "integer",
+                "description": "每页数量（分页时返回）"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "description": "错误响应",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "错误码：9999=错误，9000=积分不足"
+          },
+          "msg": {
+            "type": "string",
+            "description": "错误消息"
+          },
+          "data": {
+            "type": "object",
+            "description": "额外数据（可选）"
+          }
+        },
+        "required": [
+          "code",
+          "msg"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "API密钥认证，请在请求头中包含Authorization字段"
+      }
+    }
+  },
+  "x-middlewares": {
+    "description": "应用的全局中间件",
+    "middlewares": [
+      "CorsMiddleware",
+      "AuthMiddleware"
+    ]
+  },
+  "x-timeout": {
+    "description": "请求超时时间",
+    "timeout": "300000ms"
+  }
+}

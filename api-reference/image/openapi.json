@@ -1,0 +1,983 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Images Service API",
+        "description": "AI Image Generation Service API - Provides various AI model image generation, task query and history record functions",
+        "version": "1.0.0",
+        "contact": {
+            "name": "API Support"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8888",
+            "description": "Development environment"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Image Generation",
+            "description": "Image generation related interfaces"
+        },
+        {
+            "name": "Task Management",
+            "description": "Task management related interfaces"
+        },
+        {
+            "name": "Query",
+            "description": "Query related interfaces"
+        },
+        {
+            "name": "Health",
+            "description": "Health check related interfaces"
+        }
+    ],
+    "paths": {
+        "/v1/images/bananaduo": {
+            "post": {
+                "tags": [
+                    "Image Generation"
+                ],
+                "summary": "BananaDuo Image Generation",
+                "description": "Generate images using ComfyUI's BananaDuo workflow, supporting 1-2 reference images",
+                "operationId": "bananaDuo",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "category": {
+                                        "type": "string",
+                                        "description": "Category identifier, default is bananaduo",
+                                        "default": "bananaduo"
+                                    },
+                                    "prompt": {
+                                        "type": "string",
+                                        "description": "Prompt (required)"
+                                    },
+                                    "imageAspectRatio": {
+                                        "type": "string",
+                                        "description": "Image aspect ratio",
+                                        "default": "1:1"
+                                    },
+                                    "seed": {
+                                        "type": "integer",
+                                        "description": "Random seed"
+                                    },
+                                    "sourceImage": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        },
+                                        "description": "Source image files (1-2 images)"
+                                    },
+                                    "imageUrl": {
+                                        "type": "string",
+                                        "description": "Source image URL, multiple images separated by commas"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralResponse"
+                                },
+                                "examples": {
+                                    "success": {
+                                        "summary": "Successful response",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "Successfully",
+                                            "data": {
+                                                "taskid": "abcd_1234567890abcdef"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "9000": {
+                        "description": "Insufficient credits",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1/images/nanobanana": {
+            "post": {
+                "tags": [
+                    "Image Generation"
+                ],
+                "summary": "NanoBanana/BananaPro Image Generation",
+                "description": "Generate images using Google Vertex AI, supporting Gemini models",
+                "operationId": "nanoBanana",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "category": {
+                                        "type": "string",
+                                        "description": "Category identifier: bananapro uses Gemini-3-Pro, nanobanana uses default model"
+                                    },
+                                    "prompt": {
+                                        "type": "string",
+                                        "description": "Prompt (required)"
+                                    },
+                                    "ratio": {
+                                        "type": "string",
+                                        "description": "Aspect ratio"
+                                    },
+                                    "resolution": {
+                                        "type": "string",
+                                        "description": "Resolution"
+                                    },
+                                    "model": {
+                                        "type": "string",
+                                        "description": "AI model name"
+                                    },
+                                    "sourceImage": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        },
+                                        "description": "Source image file"
+                                    },
+                                    "imageUrl": {
+                                        "type": "string",
+                                        "description": "Source image URL"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1/images/seedreamv4": {
+            "post": {
+                "tags": [
+                    "Image Generation"
+                ],
+                "summary": "SeeDreamV4 Image Generation",
+                "description": "Generate images using Volcengine SeeDream V4 model, supports batch generation",
+                "operationId": "seeDreamV4",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "category": {
+                                        "type": "string",
+                                        "description": "Category identifier, default is seedreamv4",
+                                        "default": "seedreamv4"
+                                    },
+                                    "prompt": {
+                                        "type": "string",
+                                        "description": "Prompt (required)"
+                                    },
+                                    "batchsize": {
+                                        "type": "integer",
+                                        "description": "Batch generation quantity, 1-15",
+                                        "minimum": 1,
+                                        "maximum": 15,
+                                        "default": 1
+                                    },
+                                    "resolution": {
+                                        "type": "string",
+                                        "description": "Image resolution: 9:16, 16:9, 3:4, 4:3, 1:1",
+                                        "enum": [
+                                            "9:16",
+                                            "16:9",
+                                            "3:4",
+                                            "4:3",
+                                            "1:1"
+                                        ]
+                                    },
+                                    "sourceImage": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        },
+                                        "description": "Source image file"
+                                    },
+                                    "imageUrl": {
+                                        "type": "string",
+                                        "description": "Source image URL"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralResponse"
+                                },
+                                "examples": {
+                                    "success": {
+                                        "summary": "Successful response",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "Task created successfully",
+                                            "data": {
+                                                "taskid": "abcd_1234567890abcdef"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1/images/imagegenbytpl": {
+            "post": {
+                "tags": [
+                    "Image Generation"
+                ],
+                "summary": "Generate Image by Template",
+                "description": "Generate images based on specified template category ID, supports SeeDream and NanoBanana models",
+                "operationId": "imageGenByTemplate",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "categoryid"
+                                ],
+                                "properties": {
+                                    "categoryid": {
+                                        "type": "string",
+                                        "description": "Template category ID (required)"
+                                    },
+                                    "batchsize": {
+                                        "type": "integer",
+                                        "description": "Batch generation quantity, 1-15",
+                                        "minimum": 1,
+                                        "maximum": 15,
+                                        "default": 1
+                                    },
+                                    "sourceImage": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        },
+                                        "description": "Source image file"
+                                    },
+                                    "imageUrl": {
+                                        "type": "string",
+                                        "description": "Source image URL"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1/images/infobytaskid": {
+            "post": {
+                "tags": [
+                    "Task Management"
+                ],
+                "summary": "Query Image Info by TaskID",
+                "description": "Query the status and results of image generation tasks",
+                "operationId": "infoByTaskId",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "taskid"
+                                ],
+                                "properties": {
+                                    "taskid": {
+                                        "type": "string",
+                                        "description": "Task ID"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ImageInfoResponse"
+                                },
+                                "examples": {
+                                    "completed": {
+                                        "summary": "Task completed",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "OK",
+                                            "data": {
+                                                "taskid": "abcd_1234567890abcdef",
+                                                "starttime": "2026-01-30 12:00:00",
+                                                "url": [
+                                                    "https://example.com/image.jpg"
+                                                ],
+                                                "image_status": 3,
+                                                "width": 2048,
+                                                "height": 2048
+                                            }
+                                        }
+                                    },
+                                    "processing": {
+                                        "summary": "Processing",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "OK",
+                                            "data": {
+                                                "taskid": "abcd_1234567890abcdef",
+                                                "url": [],
+                                                "image_status": 2
+                                            }
+                                        }
+                                    },
+                                    "failed": {
+                                        "summary": "Task failed",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "OK",
+                                            "data": {
+                                                "taskid": "abcd_1234567890abcdef",
+                                                "url": [],
+                                                "image_status": 4,
+                                                "error_message": "Generation failed"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Task not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1/images/deleteimagestask": {
+            "post": {
+                "tags": [
+                    "Task Management"
+                ],
+                "summary": "Delete Image Task",
+                "description": "Batch delete specified image generation tasks",
+                "operationId": "deleteImagesTask",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DeleteImagesTaskRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteImagesTaskResponse"
+                                },
+                                "examples": {
+                                    "success": {
+                                        "summary": "Delete success",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "Successfully",
+                                            "data": {
+                                                "status": "Success"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request parameter error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1/images/getimageshistory": {
+            "post": {
+                "tags": [
+                    "Query"
+                ],
+                "summary": "Get Image History",
+                "description": "Get user's image generation history, supports pagination",
+                "operationId": "getImagesHistory",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "page": {
+                                        "type": "integer",
+                                        "description": "Page number, starts from 1",
+                                        "minimum": 1,
+                                        "default": 1
+                                    },
+                                    "pagesize": {
+                                        "type": "integer",
+                                        "description": "Page size",
+                                        "minimum": 1,
+                                        "default": 15
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ImagesHistoryResponse"
+                                },
+                                "examples": {
+                                    "withPaging": {
+                                        "summary": "With paging",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "OK",
+                                            "data": [
+                                                {
+                                                    "taskid": "abcd_1234567890abcdef",
+                                                    "starttime": "2026-01-30 12:00:00",
+                                                    "url": [
+                                                        "https://example.com/image.jpg"
+                                                    ],
+                                                    "image_status": 3,
+                                                    "width": 2048,
+                                                    "height": 2048
+                                                }
+                                            ],
+                                            "total": 100,
+                                            "page": 1,
+                                            "pagesize": 15,
+                                            "total_pages": 7
+                                        }
+                                    },
+                                    "withoutPaging": {
+                                        "summary": "Without paging",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "OK",
+                                            "data": []
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1/images/health": {
+            "get": {
+                "tags": [
+                    "Health"
+                ],
+                "summary": "Health Check",
+                "description": "Check the health status of Images service, including database connection status",
+                "operationId": "imagesHealth",
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ImagesHealthResponse"
+                                },
+                                "examples": {
+                                    "healthy": {
+                                        "summary": "Service healthy",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "Successfully",
+                                            "data": {
+                                                "status": "healthy",
+                                                "pgstatus": "UP",
+                                                "mysqlstatus": "UP",
+                                                "etcdstatus": "UP",
+                                                "Timestamp": "2026-01-30T12:00:00Z"
+                                            }
+                                        }
+                                    },
+                                    "unhealthy": {
+                                        "summary": "Service unhealthy",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "Successfully",
+                                            "data": {
+                                                "status": "unhealthy",
+                                                "pgstatus": "DOWN",
+                                                "mysqlstatus": "UP",
+                                                "etcdstatus": "UP",
+                                                "Timestamp": "2026-01-30T12:00:00Z"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "BaseResponse": {
+                "type": "object",
+                "description": "Base response structure",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "Response status code: 1000=Success, 9999=Failure, 9000=Insufficient Credits"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "Response message"
+                    }
+                },
+                "required": [
+                    "code",
+                    "msg"
+                ]
+            },
+            "GeneralData": {
+                "type": "object",
+                "description": "General data response",
+                "properties": {
+                    "taskid": {
+                        "type": "string",
+                        "description": "Task ID, used for subsequent task status query"
+                    },
+                    "url": {
+                        "type": "string",
+                        "description": "Generated image URL (returned by some interfaces)"
+                    }
+                }
+            },
+            "GeneralResponse": {
+                "type": "object",
+                "description": "General response",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseResponse"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "$ref": "#/components/schemas/GeneralData"
+                            }
+                        },
+                        "required": [
+                            "data"
+                        ]
+                    }
+                ]
+            },
+            "DeleteImagesTaskRequest": {
+                "type": "object",
+                "description": "Delete image task request",
+                "properties": {
+                    "uid": {
+                        "type": "string",
+                        "description": "User ID (optional)"
+                    },
+                    "taskids": {
+                        "type": "array",
+                        "description": "List of task IDs to delete",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "taskids"
+                ]
+            },
+            "DeleteImagesTaskData": {
+                "type": "object",
+                "description": "Delete task response data",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "description": "Deletion status: Success or Failed"
+                    }
+                }
+            },
+            "DeleteImagesTaskResponse": {
+                "type": "object",
+                "description": "Delete task response",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseResponse"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "$ref": "#/components/schemas/DeleteImagesTaskData"
+                            }
+                        },
+                        "required": [
+                            "data"
+                        ]
+                    }
+                ]
+            },
+            "ImageInfoData": {
+                "type": "object",
+                "description": "Image information data",
+                "properties": {
+                    "taskid": {
+                        "type": "string",
+                        "description": "Task ID"
+                    },
+                    "category": {
+                        "type": "string",
+                        "description": "Category"
+                    },
+                    "type": {
+                        "type": "integer",
+                        "description": "Type"
+                    },
+                    "starttime": {
+                        "type": "string",
+                        "description": "Start time",
+                        "format": "date-time"
+                    },
+                    "url": {
+                        "type": "array",
+                        "description": "List of generated image URLs",
+                        "items": {
+                            "type": "string",
+                            "format": "uri"
+                        }
+                    },
+                    "image_status": {
+                        "type": "integer",
+                        "description": "Task status: 1=Queued, 2=Processing, 3=Completed, 4=Failed",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4
+                        ]
+                    },
+                    "width": {
+                        "type": "integer",
+                        "description": "Image width"
+                    },
+                    "height": {
+                        "type": "integer",
+                        "description": "Image height"
+                    },
+                    "images": {
+                        "type": "array",
+                        "description": "Source image list",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "prompt": {
+                        "type": "string",
+                        "description": "Prompt"
+                    },
+                    "negative": {
+                        "type": "string",
+                        "description": "Negative prompt"
+                    },
+                    "origseed": {
+                        "type": "integer",
+                        "description": "Random seed"
+                    },
+                    "error_message": {
+                        "type": "string",
+                        "description": "Error message (when task fails)"
+                    }
+                }
+            },
+            "ImageInfoResponse": {
+                "type": "object",
+                "description": "Image info response",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseResponse"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "$ref": "#/components/schemas/ImageInfoData"
+                            }
+                        },
+                        "required": [
+                            "data"
+                        ]
+                    }
+                ]
+            },
+            "ImagesHistoryResponse": {
+                "type": "object",
+                "description": "Image history response",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseResponse"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "type": "array",
+                                "description": "Image information list",
+                                "items": {
+                                    "$ref": "#/components/schemas/ImageInfoData"
+                                }
+                            },
+                            "total": {
+                                "type": "integer",
+                                "description": "Total count (returned during pagination)"
+                            },
+                            "total_pages": {
+                                "type": "integer",
+                                "description": "Total pages (returned during pagination)"
+                            },
+                            "page": {
+                                "type": "integer",
+                                "description": "Current page index (returned during pagination)"
+                            },
+                            "pagesize": {
+                                "type": "integer",
+                                "description": "Page size (returned during pagination)"
+                            }
+                        },
+                        "required": [
+                            "data"
+                        ]
+                    }
+                ]
+            },
+            "ImagesHealthData": {
+                "type": "object",
+                "description": "Health check data",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "description": "Overall status: healthy or unhealthy"
+                    },
+                    "pgstatus": {
+                        "type": "string",
+                        "description": "PostgreSQL status: UP or DOWN"
+                    },
+                    "mysqlstatus": {
+                        "type": "string",
+                        "description": "MySQL status: UP or DOWN"
+                    },
+                    "etcdstatus": {
+                        "type": "string",
+                        "description": "ETCD status: UP or DOWN"
+                    },
+                    "Timestamp": {
+                        "type": "string",
+                        "description": "Timestamp",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "status",
+                    "pgstatus",
+                    "mysqlstatus",
+                    "etcdstatus",
+                    "Timestamp"
+                ]
+            },
+            "ImagesHealthResponse": {
+                "type": "object",
+                "description": "Health check response",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseResponse"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "$ref": "#/components/schemas/ImagesHealthData"
+                            }
+                        },
+                        "required": [
+                            "data"
+                        ]
+                    }
+                ]
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "description": "Error response",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "Error code: 9999=Error, 9000=Insufficient Credits"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "Error message"
+                    }
+                },
+                "required": [
+                    "code",
+                    "msg"
+                ]
+            }
+        },
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization",
+                "description": "API Key authentication, please include the Authorization field in the request header"
+            }
+        }
+    },
+    "x-middlewares": {
+        "description": "Global middleware of the application",
+        "middlewares": [
+            "CorsMiddleware",
+            "AuthMiddleware"
+        ]
+    },
+    "x-timeout": {
+        "description": "Request timeout period",
+        "timeout": "180000ms"
+    }
+}

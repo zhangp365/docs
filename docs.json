@@ -57,8 +57,12 @@
             ]
           },
           {
-            "group": "Endpoints",
-            "openapi": "api-reference/openapi.json"
+            "group": "Image API",
+            "openapi": "api-reference/image/openapi.json"
+          },
+          {
+            "group": "Video API",
+            "openapi": "api-reference/video/openapi.json"
           }
         ]
       }

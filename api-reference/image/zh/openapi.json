@@ -1,0 +1,983 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Images Service API",
+    "description": "AI图片生成服务 API - 提供多种AI模型图片生成、任务查询和历史记录功能",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8888",
+      "description": "开发环境"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Image Generation",
+      "description": "图片生成相关接口"
+    },
+    {
+      "name": "Task Management",
+      "description": "任务管理相关接口"
+    },
+    {
+      "name": "Query",
+      "description": "查询相关接口"
+    },
+    {
+      "name": "Health",
+      "description": "健康检查相关接口"
+    }
+  ],
+  "paths": {
+    "/v1/images/bananaduo": {
+      "post": {
+        "tags": [
+          "Image Generation"
+        ],
+        "summary": "BananaDuo图片生成",
+        "description": "使用ComfyUI的BananaDuo工作流生成图片，支持1-2张参考图片",
+        "operationId": "bananaDuo",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "string",
+                    "description": "分类标识，默认为bananaduo",
+                    "default": "bananaduo"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "提示词（必填）"
+                  },
+                  "imageAspectRatio": {
+                    "type": "string",
+                    "description": "图片宽高比",
+                    "default": "1:1"
+                  },
+                  "seed": {
+                    "type": "integer",
+                    "description": "随机种子"
+                  },
+                  "sourceImage": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "源图片文件（1-2张）"
+                  },
+                  "imageUrl": {
+                    "type": "string",
+                    "description": "源图片URL，多个图片用逗号分隔"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "成功响应",
+                    "value": {
+                      "code": 1000,
+                      "msg": "Successfully",
+                      "data": {
+                        "taskid": "abcd_1234567890abcdef"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "9000": {
+            "description": "积分不足",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/images/nanobanana": {
+      "post": {
+        "tags": [
+          "Image Generation"
+        ],
+        "summary": "NanoBanana/BananaPro图片生成",
+        "description": "使用Google Vertex AI生成图片，支持Gemini模型",
+        "operationId": "nanoBanana",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "string",
+                    "description": "分类标识：bananapro使用Gemini-3-Pro，nanobanana使用默认模型"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "提示词（必填）"
+                  },
+                  "ratio": {
+                    "type": "string",
+                    "description": "宽高比"
+                  },
+                  "resolution": {
+                    "type": "string",
+                    "description": "分辨率"
+                  },
+                  "model": {
+                    "type": "string",
+                    "description": "AI模型名称"
+                  },
+                  "sourceImage": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "源图片文件"
+                  },
+                  "imageUrl": {
+                    "type": "string",
+                    "description": "源图片URL"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/images/seedreamv4": {
+      "post": {
+        "tags": [
+          "Image Generation"
+        ],
+        "summary": "SeeDreamV4图片生成",
+        "description": "使用火山引擎SeeDream V4模型生成图片，支持批量生成",
+        "operationId": "seeDreamV4",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "string",
+                    "description": "分类标识，默认为seedreamv4",
+                    "default": "seedreamv4"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "提示词（必填）"
+                  },
+                  "batchsize": {
+                    "type": "integer",
+                    "description": "批量生成数量，1-15",
+                    "minimum": 1,
+                    "maximum": 15,
+                    "default": 1
+                  },
+                  "resolution": {
+                    "type": "string",
+                    "description": "图片分辨率：9:16、16:9、3:4、4:3、1:1",
+                    "enum": [
+                      "9:16",
+                      "16:9",
+                      "3:4",
+                      "4:3",
+                      "1:1"
+                    ]
+                  },
+                  "sourceImage": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "源图片文件"
+                  },
+                  "imageUrl": {
+                    "type": "string",
+                    "description": "源图片URL"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "成功响应",
+                    "value": {
+                      "code": 1000,
+                      "msg": "Task created successfully",
+                      "data": {
+                        "taskid": "abcd_1234567890abcdef"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/images/imagegenbytpl": {
+      "post": {
+        "tags": [
+          "Image Generation"
+        ],
+        "summary": "按模板生成图片",
+        "description": "根据指定的模板分类ID生成图片，支持SeeDream和NanoBanana模型",
+        "operationId": "imageGenByTemplate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "categoryid"
+                ],
+                "properties": {
+                  "categoryid": {
+                    "type": "string",
+                    "description": "模板分类ID（必填）"
+                  },
+                  "batchsize": {
+                    "type": "integer",
+                    "description": "批量生成数量，1-15",
+                    "minimum": 1,
+                    "maximum": 15,
+                    "default": 1
+                  },
+                  "sourceImage": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "源图片文件"
+                  },
+                  "imageUrl": {
+                    "type": "string",
+                    "description": "源图片URL"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/images/infobytaskid": {
+      "post": {
+        "tags": [
+          "Task Management"
+        ],
+        "summary": "根据任务ID查询图片信息",
+        "description": "查询图片生成任务的状态和结果",
+        "operationId": "infoByTaskId",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "taskid"
+                ],
+                "properties": {
+                  "taskid": {
+                    "type": "string",
+                    "description": "任务ID"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageInfoResponse"
+                },
+                "examples": {
+                  "completed": {
+                    "summary": "任务完成",
+                    "value": {
+                      "code": 1000,
+                      "msg": "OK",
+                      "data": {
+                        "taskid": "abcd_1234567890abcdef",
+                        "starttime": "2026-01-30 12:00:00",
+                        "url": [
+                          "https://example.com/image.jpg"
+                        ],
+                        "image_status": 3,
+                        "width": 2048,
+                        "height": 2048
+                      }
+                    }
+                  },
+                  "processing": {
+                    "summary": "处理中",
+                    "value": {
+                      "code": 1000,
+                      "msg": "OK",
+                      "data": {
+                        "taskid": "abcd_1234567890abcdef",
+                        "url": [],
+                        "image_status": 2
+                      }
+                    }
+                  },
+                  "failed": {
+                    "summary": "任务失败",
+                    "value": {
+                      "code": 1000,
+                      "msg": "OK",
+                      "data": {
+                        "taskid": "abcd_1234567890abcdef",
+                        "url": [],
+                        "image_status": 4,
+                        "error_message": "Generation failed"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "任务不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/images/deleteimagestask": {
+      "post": {
+        "tags": [
+          "Task Management"
+        ],
+        "summary": "删除图片任务",
+        "description": "批量删除指定的图片生成任务",
+        "operationId": "deleteImagesTask",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteImagesTaskRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteImagesTaskResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "删除成功",
+                    "value": {
+                      "code": 1000,
+                      "msg": "Successfully",
+                      "data": {
+                        "status": "Success"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/images/getimageshistory": {
+      "post": {
+        "tags": [
+          "Query"
+        ],
+        "summary": "获取图片历史",
+        "description": "获取用户的图片生成历史记录，支持分页",
+        "operationId": "getImagesHistory",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {
+                    "type": "integer",
+                    "description": "页码，从1开始",
+                    "minimum": 1,
+                    "default": 1
+                  },
+                  "pagesize": {
+                    "type": "integer",
+                    "description": "每页数量",
+                    "minimum": 1,
+                    "default": 15
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImagesHistoryResponse"
+                },
+                "examples": {
+                  "withPaging": {
+                    "summary": "带分页",
+                    "value": {
+                      "code": 1000,
+                      "msg": "OK",
+                      "data": [
+                        {
+                          "taskid": "abcd_1234567890abcdef",
+                          "starttime": "2026-01-30 12:00:00",
+                          "url": [
+                            "https://example.com/image.jpg"
+                          ],
+                          "image_status": 3,
+                          "width": 2048,
+                          "height": 2048
+                        }
+                      ],
+                      "total": 100,
+                      "page": 1,
+                      "pagesize": 15,
+                      "total_pages": 7
+                    }
+                  },
+                  "withoutPaging": {
+                    "summary": "不带分页",
+                    "value": {
+                      "code": 1000,
+                      "msg": "OK",
+                      "data": []
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/images/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "健康检查",
+        "description": "检查Images服务的健康状态，包括数据库连接状态",
+        "operationId": "imagesHealth",
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImagesHealthResponse"
+                },
+                "examples": {
+                  "healthy": {
+                    "summary": "服务健康",
+                    "value": {
+                      "code": 1000,
+                      "msg": "Successfully",
+                      "data": {
+                        "status": "healthy",
+                        "pgstatus": "UP",
+                        "mysqlstatus": "UP",
+                        "etcdstatus": "UP",
+                        "Timestamp": "2026-01-30T12:00:00Z"
+                      }
+                    }
+                  },
+                  "unhealthy": {
+                    "summary": "服务不健康",
+                    "value": {
+                      "code": 1000,
+                      "msg": "Successfully",
+                      "data": {
+                        "status": "unhealthy",
+                        "pgstatus": "DOWN",
+                        "mysqlstatus": "UP",
+                        "etcdstatus": "UP",
+                        "Timestamp": "2026-01-30T12:00:00Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BaseResponse": {
+        "type": "object",
+        "description": "基础响应结构",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "响应状态码：1000=成功，9999=失败，9000=积分不足"
+          },
+          "msg": {
+            "type": "string",
+            "description": "响应消息"
+          }
+        },
+        "required": [
+          "code",
+          "msg"
+        ]
+      },
+      "GeneralData": {
+        "type": "object",
+        "description": "通用数据响应",
+        "properties": {
+          "taskid": {
+            "type": "string",
+            "description": "任务ID，用于后续查询任务状态"
+          },
+          "url": {
+            "type": "string",
+            "description": "生成的图片URL（某些接口返回）"
+          }
+        }
+      },
+      "GeneralResponse": {
+        "type": "object",
+        "description": "通用响应",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/GeneralData"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        ]
+      },
+      "DeleteImagesTaskRequest": {
+        "type": "object",
+        "description": "删除图片任务请求",
+        "properties": {
+          "uid": {
+            "type": "string",
+            "description": "用户ID（可选）"
+          },
+          "taskids": {
+            "type": "array",
+            "description": "要删除的任务ID列表",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "taskids"
+        ]
+      },
+      "DeleteImagesTaskData": {
+        "type": "object",
+        "description": "删除任务响应数据",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "删除状态：Success或Failed"
+          }
+        }
+      },
+      "DeleteImagesTaskResponse": {
+        "type": "object",
+        "description": "删除任务响应",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/DeleteImagesTaskData"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        ]
+      },
+      "ImageInfoData": {
+        "type": "object",
+        "description": "图片信息数据",
+        "properties": {
+          "taskid": {
+            "type": "string",
+            "description": "任务ID"
+          },
+          "category": {
+            "type": "string",
+            "description": "分类"
+          },
+          "type": {
+            "type": "integer",
+            "description": "类型"
+          },
+          "starttime": {
+            "type": "string",
+            "description": "开始时间",
+            "format": "date-time"
+          },
+          "url": {
+            "type": "array",
+            "description": "生成的图片URL列表",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "image_status": {
+            "type": "integer",
+            "description": "任务状态：1=排队中，2=处理中，3=完成，4=失败",
+            "enum": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "width": {
+            "type": "integer",
+            "description": "图片宽度"
+          },
+          "height": {
+            "type": "integer",
+            "description": "图片高度"
+          },
+          "images": {
+            "type": "array",
+            "description": "源图片列表",
+            "items": {
+              "type": "string"
+            }
+          },
+          "prompt": {
+            "type": "string",
+            "description": "提示词"
+          },
+          "negative": {
+            "type": "string",
+            "description": "负向提示词"
+          },
+          "origseed": {
+            "type": "integer",
+            "description": "随机种子"
+          },
+          "error_message": {
+            "type": "string",
+            "description": "错误消息（任务失败时）"
+          }
+        }
+      },
+      "ImageInfoResponse": {
+        "type": "object",
+        "description": "图片信息响应",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/ImageInfoData"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        ]
+      },
+      "ImagesHistoryResponse": {
+        "type": "object",
+        "description": "图片历史响应",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "description": "图片信息列表",
+                "items": {
+                  "$ref": "#/components/schemas/ImageInfoData"
+                }
+              },
+              "total": {
+                "type": "integer",
+                "description": "总数（分页时返回）"
+              },
+              "total_pages": {
+                "type": "integer",
+                "description": "总页数（分页时返回）"
+              },
+              "page": {
+                "type": "integer",
+                "description": "当前页码（分页时返回）"
+              },
+              "pagesize": {
+                "type": "integer",
+                "description": "每页数量（分页时返回）"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        ]
+      },
+      "ImagesHealthData": {
+        "type": "object",
+        "description": "健康检查数据",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "总体状态：healthy或unhealthy"
+          },
+          "pgstatus": {
+            "type": "string",
+            "description": "PostgreSQL状态：UP或DOWN"
+          },
+          "mysqlstatus": {
+            "type": "string",
+            "description": "MySQL状态：UP或DOWN"
+          },
+          "etcdstatus": {
+            "type": "string",
+            "description": "ETCD状态：UP或DOWN"
+          },
+          "Timestamp": {
+            "type": "string",
+            "description": "时间戳",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "status",
+          "pgstatus",
+          "mysqlstatus",
+          "etcdstatus",
+          "Timestamp"
+        ]
+      },
+      "ImagesHealthResponse": {
+        "type": "object",
+        "description": "健康检查响应",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/ImagesHealthData"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "description": "错误响应",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "错误码：9999=错误，9000=积分不足"
+          },
+          "msg": {
+            "type": "string",
+            "description": "错误消息"
+          }
+        },
+        "required": [
+          "code",
+          "msg"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "API密钥认证，请在请求头中包含Authorization字段"
+      }
+    }
+  },
+  "x-middlewares": {
+    "description": "应用的全局中间件",
+    "middlewares": [
+      "CorsMiddleware",
+      "AuthMiddleware"
+    ]
+  },
+  "x-timeout": {
+    "description": "请求超时时间",
+    "timeout": "180000ms"
+  }
+}

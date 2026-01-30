@@ -1,0 +1,1246 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Video Service API",
+        "description": "Video Generation Service API - Provides various AI video generation, task queries and history features",
+        "version": "1.0.0",
+        "contact": {
+            "name": "API Support"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8888",
+            "description": "Development environment"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Video Generation",
+            "description": "Video generation related interfaces"
+        },
+        {
+            "name": "Task Management",
+            "description": "Task management related interfaces"
+        },
+        {
+            "name": "Query",
+            "description": "Query related interfaces"
+        }
+    ],
+    "paths": {
+        "/v1/video/videogenerate": {
+            "post": {
+                "tags": [
+                    "Video Generation"
+                ],
+                "summary": "General Video Generation",
+                "description": "Supports various AI models for video generation, including Doubao, MiniMax, Vidu, ViduV2, Veo3Vertex, etc.",
+                "operationId": "videoGenerate",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "prompt": {
+                                        "type": "string",
+                                        "description": "Prompt, describing the video content to be generated"
+                                    },
+                                    "source": {
+                                        "type": "string",
+                                        "description": "AI model source: 1=DoubaoV1, 2=Doubao, 3=Vidu, 4=DoubaoV1, 5=ViduV2, 9/11=Doubao-SD-V1, 12=DoubSDV1-Abroad, 13=ViduV2-PPIO, 14=Veo3Vertex, 15=WanV21-PPIO, 16=Rep-Wan22-Fast",
+                                        "enum": [
+                                            "1",
+                                            "2",
+                                            "3",
+                                            "4",
+                                            "5",
+                                            "9",
+                                            "11",
+                                            "12",
+                                            "13",
+                                            "14",
+                                            "15",
+                                            "16"
+                                        ],
+                                        "default": "4"
+                                    },
+                                    "ratio": {
+                                        "type": "string",
+                                        "description": "Video aspect ratio, e.g., 16:9, 9:16, 3:4, 1:1",
+                                        "example": "16:9"
+                                    },
+                                    "duration": {
+                                        "type": "integer",
+                                        "description": "Video duration (seconds), some models support 4/5/8/10 seconds"
+                                    },
+                                    "seed": {
+                                        "type": "integer",
+                                        "description": "Random seed for generating consistent results"
+                                    },
+                                    "resolution": {
+                                        "type": "string",
+                                        "description": "Video resolution, e.g., 720p, 1080p",
+                                        "example": "720p"
+                                    },
+                                    "fps": {
+                                        "type": "string",
+                                        "description": "Frame rate",
+                                        "example": "24"
+                                    },
+                                    "sourceImage": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        },
+                                        "description": "Source image files (some models require 1-2 images)"
+                                    },
+                                    "imageUrl": {
+                                        "type": "string",
+                                        "description": "Source image URL, multiple images separated by commas"
+                                    },
+                                    "v2type": {
+                                        "type": "string",
+                                        "description": "ViduV2 type: image2video, template2video, startend2video",
+                                        "enum": [
+                                            "image2video",
+                                            "template2video",
+                                            "startend2video"
+                                        ]
+                                    },
+                                    "template": {
+                                        "type": "string",
+                                        "description": "Template name (used in template2video mode)"
+                                    },
+                                    "camerafixed": {
+                                        "type": "string",
+                                        "description": "Fixed camera, 1 for enabled"
+                                    },
+                                    "enhancePrompt": {
+                                        "type": "string",
+                                        "description": "Enhanced prompt, 0 for disabled, 1 for enabled"
+                                    },
+                                    "negativePrompt": {
+                                        "type": "string",
+                                        "description": "Negative prompt"
+                                    },
+                                    "model": {
+                                        "type": "string",
+                                        "description": "Sub-model name"
+                                    },
+                                    "width": {
+                                        "type": "integer",
+                                        "description": "Video width"
+                                    },
+                                    "height": {
+                                        "type": "integer",
+                                        "description": "Video height"
+                                    },
+                                    "steps": {
+                                        "type": "integer",
+                                        "description": "Generation steps"
+                                    },
+                                    "guidanceScale": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "description": "Guidance scale"
+                                    },
+                                    "flowShift": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "description": "Flow shift"
+                                    },
+                                    "enableSafetyChecker": {
+                                        "type": "string",
+                                        "description": "Enable safety checker, 1 for enabled"
+                                    },
+                                    "fastMode": {
+                                        "type": "string",
+                                        "description": "Fast mode, 1 for enabled"
+                                    },
+                                    "lora1": {
+                                        "type": "string",
+                                        "description": "LoRA1 path"
+                                    },
+                                    "lora2": {
+                                        "type": "string",
+                                        "description": "LoRA2 path"
+                                    },
+                                    "lora3": {
+                                        "type": "string",
+                                        "description": "LoRA3 path"
+                                    },
+                                    "scale1": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "description": "LoRA1 weight"
+                                    },
+                                    "scale2": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "description": "LoRA2 weight"
+                                    },
+                                    "scale3": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "description": "LoRA3 weight"
+                                    },
+                                    "disableSafetyChecker": {
+                                        "type": "string",
+                                        "description": "Disable safety checker, 1 for disabled"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralResponse"
+                                },
+                                "examples": {
+                                    "success": {
+                                        "summary": "Successful response",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "Successfully",
+                                            "data": {
+                                                "taskid": "12345678_abc123def456"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request parameter error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "9000": {
+                        "description": "Insufficient credits",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1/video/videogenbyscene": {
+            "post": {
+                "tags": [
+                    "Video Generation"
+                ],
+                "summary": "Generate Video by Scene",
+                "description": "Generate video based on the specified scene category ID, supporting story mode and scene mode",
+                "operationId": "videoGenByScene",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "categoryid"
+                                ],
+                                "properties": {
+                                    "categoryid": {
+                                        "type": "string",
+                                        "description": "Scene category ID (required)"
+                                    },
+                                    "region": {
+                                        "type": "integer",
+                                        "description": "Region: 1=Abroad, 2=Domestic",
+                                        "enum": [
+                                            1,
+                                            2
+                                        ],
+                                        "default": 1
+                                    },
+                                    "resolution": {
+                                        "type": "string",
+                                        "description": "Video resolution: 720p or 1080p",
+                                        "enum": [
+                                            "720p",
+                                            "1080p"
+                                        ],
+                                        "default": "720p"
+                                    },
+                                    "gender": {
+                                        "type": "integer",
+                                        "description": "Gender: 1=Male, 2=Female, 3=Mixed",
+                                        "enum": [
+                                            1,
+                                            2,
+                                            3
+                                        ],
+                                        "default": 3
+                                    },
+                                    "sourceImage": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        },
+                                        "description": "Source image files (1-2 images)"
+                                    },
+                                    "imageUrl": {
+                                        "type": "string",
+                                        "description": "Source image URL, multiple images separated by commas"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1/video/videogenbytpl": {
+            "post": {
+                "tags": [
+                    "Video Generation"
+                ],
+                "summary": "Generate Video by Template",
+                "description": "Generate video based on the specified template category ID",
+                "operationId": "videoGenByTpl",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "categoryid"
+                                ],
+                                "properties": {
+                                    "categoryid": {
+                                        "type": "string",
+                                        "description": "Template category ID (required)"
+                                    },
+                                    "prompt": {
+                                        "type": "string",
+                                        "description": "Prompt (if template not configured)"
+                                    },
+                                    "seed": {
+                                        "type": "integer",
+                                        "description": "Random seed"
+                                    },
+                                    "sourceImage": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        },
+                                        "description": "Source image file"
+                                    },
+                                    "imageUrl": {
+                                        "type": "string",
+                                        "description": "Source image URL"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1/video/tlwangenerate": {
+            "post": {
+                "tags": [
+                    "Video Generation"
+                ],
+                "summary": "TLWan Video Generation",
+                "description": "Generate video using TLWan22 model, supporting LoRA and custom resolution",
+                "operationId": "tlwanGenerate",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "prompt"
+                                ],
+                                "properties": {
+                                    "prompt": {
+                                        "type": "string",
+                                        "description": "Prompt (required)"
+                                    },
+                                    "resolution": {
+                                        "type": "string",
+                                        "description": "Video resolution: 480p or 720p",
+                                        "enum": [
+                                            "480p",
+                                            "720p"
+                                        ],
+                                        "default": "720p"
+                                    },
+                                    "seed": {
+                                        "type": "integer",
+                                        "description": "Random seed"
+                                    },
+                                    "loras": {
+                                        "type": "string",
+                                        "description": "LoRA paths, multiple separated by commas (up to 6)"
+                                    },
+                                    "loras_scale": {
+                                        "type": "string",
+                                        "description": "LoRA weights, multiple separated by commas (up to 6)"
+                                    },
+                                    "sourceImage": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        },
+                                        "description": "Source image file"
+                                    },
+                                    "imageUrl": {
+                                        "type": "string",
+                                        "description": "Source image URL"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1/video/infobytaskid": {
+            "post": {
+                "tags": [
+                    "Task Management"
+                ],
+                "summary": "Query Information by Task ID",
+                "description": "Query the status and results of video processing tasks. Supports getting detailed info",
+                "operationId": "infoByTaskId",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "taskid"
+                                ],
+                                "properties": {
+                                    "taskid": {
+                                        "type": "string",
+                                        "description": "Task ID"
+                                    },
+                                    "moreTaskInfo": {
+                                        "type": "boolean",
+                                        "description": "Whether to return more detailed task information"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskInfoResponse"
+                                },
+                                "examples": {
+                                    "completed": {
+                                        "summary": "Task completed",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "OK",
+                                            "data": {
+                                                "taskid": "12345678_abc123",
+                                                "url": [
+                                                    "https://example.com/video.mp4"
+                                                ],
+                                                "task_status": 3
+                                            }
+                                        }
+                                    },
+                                    "processing": {
+                                        "summary": "Processing",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "OK",
+                                            "data": {
+                                                "taskid": "12345678_abc123",
+                                                "url": [],
+                                                "task_status": 2
+                                            }
+                                        }
+                                    },
+                                    "failed": {
+                                        "summary": "Task failed",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "OK",
+                                            "data": {
+                                                "taskid": "12345678_abc123",
+                                                "url": [],
+                                                "task_status": 4,
+                                                "message": "Generation failed"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Task does not exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1/video/deletevideotask": {
+            "post": {
+                "tags": [
+                    "Task Management"
+                ],
+                "summary": "Delete Video Task",
+                "description": "Batch delete specified video tasks",
+                "operationId": "deleteVideoTask",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DeleteVideoTaskRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteVideoTaskResponse"
+                                },
+                                "examples": {
+                                    "success": {
+                                        "summary": "Deletion successful",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "Successfully",
+                                            "data": {
+                                                "status": "Success"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Request parameter error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "missingTaskIds": {
+                                        "summary": "Missing task IDs",
+                                        "value": {
+                                            "code": 9999,
+                                            "msg": "Delete failed, error info: missing taskids parameter"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1/video/getvideohistory": {
+            "post": {
+                "tags": [
+                    "Query"
+                ],
+                "summary": "Get Video History",
+                "description": "Get user's video generation history, supporting pagination",
+                "operationId": "getVideoHistory",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "page": {
+                                        "type": "integer",
+                                        "description": "Page number, starting from 1",
+                                        "minimum": 1,
+                                        "default": 1
+                                    },
+                                    "pagesize": {
+                                        "type": "integer",
+                                        "description": "Page size",
+                                        "minimum": 1,
+                                        "default": 15
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VideoHistoryResponse"
+                                },
+                                "examples": {
+                                    "withPaging": {
+                                        "summary": "With pagination",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "OK",
+                                            "data": [
+                                                {
+                                                    "taskid": "12345678_abc123",
+                                                    "starttime": "2026-01-30 12:00:00",
+                                                    "genvideourl": "https://example.com/video.mp4",
+                                                    "status": 3,
+                                                    "Resolution": "720p",
+                                                    "scenename": "Scene Name"
+                                                }
+                                            ],
+                                            "total": 100,
+                                            "page": 1,
+                                            "pagesize": 15,
+                                            "total_pages": 7
+                                        }
+                                    },
+                                    "withoutPaging": {
+                                        "summary": "Without pagination",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "OK",
+                                            "data": []
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/v1/video/getcategory": {
+            "get": {
+                "tags": [
+                    "Query"
+                ],
+                "summary": "Get Scene Categories",
+                "description": "Get the list of available video generation scene categories",
+                "operationId": "getCategory",
+                "responses": {
+                    "200": {
+                        "description": "Request successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetCategoryResponse"
+                                },
+                                "examples": {
+                                    "success": {
+                                        "summary": "Successful response",
+                                        "value": {
+                                            "code": 1000,
+                                            "msg": "Successfully",
+                                            "data": [
+                                                {
+                                                    "categoryid": "cat001",
+                                                    "categoryname": "Scenery",
+                                                    "imagecount": 10,
+                                                    "region": [
+                                                        {
+                                                            "region": 1,
+                                                            "scenename": "sea_scene"
+                                                        },
+                                                        {
+                                                            "region": 2,
+                                                            "scenename": "mountain_scene"
+                                                        }
+                                                    ],
+                                                    "Resolution": [
+                                                        "720p",
+                                                        "1080p"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No available categories",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                },
+                                "examples": {
+                                    "noCategory": {
+                                        "summary": "No available categories",
+                                        "value": {
+                                            "code": 9999,
+                                            "msg": "failure, please wait and try again, error info: error: no available category"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "BaseResponse": {
+                "type": "object",
+                "description": "Base response structure",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "Response status code: 1000=Success, 9999=Failure, 9000=Insufficient Credits"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "Response message"
+                    }
+                },
+                "required": [
+                    "code",
+                    "msg"
+                ]
+            },
+            "GeneralData": {
+                "type": "object",
+                "description": "General data response",
+                "properties": {
+                    "taskid": {
+                        "type": "string",
+                        "description": "Task ID, used for subsequent task status queries"
+                    }
+                },
+                "required": [
+                    "taskid"
+                ]
+            },
+            "GeneralResponse": {
+                "type": "object",
+                "description": "General response",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseResponse"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "$ref": "#/components/schemas/GeneralData"
+                            }
+                        },
+                        "required": [
+                            "data"
+                        ]
+                    }
+                ]
+            },
+            "DeleteVideoTaskRequest": {
+                "type": "object",
+                "description": "Delete video task request",
+                "properties": {
+                    "taskids": {
+                        "type": "array",
+                        "description": "List of task IDs to delete",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "taskids"
+                ]
+            },
+            "DeleteVideoTaskData": {
+                "type": "object",
+                "description": "Delete task response data",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "description": "Deletion status: Success or Failed"
+                    }
+                }
+            },
+            "DeleteVideoTaskResponse": {
+                "type": "object",
+                "description": "Delete task response",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseResponse"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "$ref": "#/components/schemas/DeleteVideoTaskData"
+                            }
+                        },
+                        "required": [
+                            "data"
+                        ]
+                    }
+                ]
+            },
+            "RegionData": {
+                "type": "object",
+                "description": "Region data",
+                "properties": {
+                    "region": {
+                        "type": "integer",
+                        "description": "Region: 1=Abroad, 2=Domestic"
+                    },
+                    "scenename": {
+                        "type": "string",
+                        "description": "Scene name"
+                    }
+                },
+                "required": [
+                    "region",
+                    "scenename"
+                ]
+            },
+            "Category": {
+                "type": "object",
+                "description": "Scene category",
+                "properties": {
+                    "categoryid": {
+                        "type": "string",
+                        "description": "Category ID"
+                    },
+                    "categoryname": {
+                        "type": "string",
+                        "description": "Category name"
+                    },
+                    "imagecount": {
+                        "type": "integer",
+                        "description": "Image count"
+                    },
+                    "region": {
+                        "type": "array",
+                        "description": "Region list",
+                        "items": {
+                            "$ref": "#/components/schemas/RegionData"
+                        }
+                    },
+                    "Resolution": {
+                        "type": "array",
+                        "description": "Supported resolution list",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "categoryid",
+                    "categoryname"
+                ]
+            },
+            "GetCategoryResponse": {
+                "type": "object",
+                "description": "Get category response",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseResponse"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "type": "array",
+                                "description": "Category list",
+                                "items": {
+                                    "$ref": "#/components/schemas/Category"
+                                }
+                            }
+                        },
+                        "required": [
+                            "data"
+                        ]
+                    }
+                ]
+            },
+            "TaskInfoData": {
+                "type": "object",
+                "description": "Task information data",
+                "properties": {
+                    "taskid": {
+                        "type": "string",
+                        "description": "Task ID"
+                    },
+                    "url": {
+                        "type": "array",
+                        "description": "List of generated video URLs",
+                        "items": {
+                            "type": "string",
+                            "format": "uri"
+                        }
+                    },
+                    "task_status": {
+                        "type": "integer",
+                        "description": "Task status: 1=Pending, 2=Processing, 3=Completed, 4=Failed, 5=Uploading",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                        ]
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Error message (when task fails)"
+                    },
+                    "prompt": {
+                        "type": "string",
+                        "description": "Prompt"
+                    },
+                    "imageurl": {
+                        "type": "string",
+                        "description": "Source image URL"
+                    },
+                    "resolution": {
+                        "type": "string",
+                        "description": "Video resolution"
+                    },
+                    "fps": {
+                        "type": "integer",
+                        "description": "Frame rate"
+                    },
+                    "source": {
+                        "type": "string",
+                        "description": "AI model source"
+                    },
+                    "duration": {
+                        "type": "integer",
+                        "description": "Video duration (seconds)"
+                    },
+                    "seed": {
+                        "type": "integer",
+                        "description": "Random seed"
+                    },
+                    "scenename": {
+                        "type": "string",
+                        "description": "Scene name"
+                    },
+                    "ratio": {
+                        "type": "string",
+                        "description": "Aspect ratio"
+                    },
+                    "loras": {
+                        "type": "string",
+                        "description": "LoRA"
+                    },
+                    "loras_scale": {
+                        "type": "string",
+                        "description": "LoRA weight"
+                    }
+                }
+            },
+            "TaskInfoRequest": {
+                "type": "object",
+                "description": "Task info query request",
+                "properties": {
+                    "taskid": {
+                        "type": "string",
+                        "description": "Task ID"
+                    },
+                    "moreTaskInfo": {
+                        "type": "boolean",
+                        "description": "Whether to return more detailed task information"
+                    }
+                },
+                "required": [
+                    "taskid"
+                ]
+            },
+            "TaskInfoResponse": {
+                "type": "object",
+                "description": "Task info response",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseResponse"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "$ref": "#/components/schemas/TaskInfoData"
+                            }
+                        },
+                        "required": [
+                            "data"
+                        ]
+                    }
+                ]
+            },
+            "VideoInfoData": {
+                "type": "object",
+                "description": "Video information data",
+                "properties": {
+                    "taskid": {
+                        "type": "string",
+                        "description": "Task ID"
+                    },
+                    "model": {
+                        "type": "string",
+                        "description": "AI model"
+                    },
+                    "starttime": {
+                        "type": "string",
+                        "description": "Start time",
+                        "format": "date-time"
+                    },
+                    "genvideourl": {
+                        "type": "string",
+                        "description": "Generated video URL",
+                        "format": "uri"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "description": "Task status: 1=Queued, 2=Processing, 3=Completed, 4=Failed",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4
+                        ]
+                    },
+                    "scenename": {
+                        "type": "string",
+                        "description": "Scene name"
+                    },
+                    "Duration": {
+                        "type": "integer",
+                        "description": "Video duration (seconds)"
+                    },
+                    "seed": {
+                        "type": "integer",
+                        "description": "Random seed"
+                    },
+                    "ratio": {
+                        "type": "string",
+                        "description": "Aspect ratio"
+                    },
+                    "Resolution": {
+                        "type": "string",
+                        "description": "Video resolution"
+                    },
+                    "prompt": {
+                        "type": "string",
+                        "description": "Prompt"
+                    },
+                    "imageurl": {
+                        "type": "string",
+                        "description": "Source image URL"
+                    }
+                }
+            },
+            "VideoHistoryResponse": {
+                "type": "object",
+                "description": "Video history response",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseResponse"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "type": "array",
+                                "description": "Video information list",
+                                "items": {
+                                    "$ref": "#/components/schemas/VideoInfoData"
+                                }
+                            },
+                            "total": {
+                                "type": "integer",
+                                "description": "Total count (returned during pagination)"
+                            },
+                            "total_pages": {
+                                "type": "integer",
+                                "description": "Total pages (returned during pagination)"
+                            },
+                            "page": {
+                                "type": "integer",
+                                "description": "Current page index (returned during pagination)"
+                            },
+                            "pagesize": {
+                                "type": "integer",
+                                "description": "Page size (returned during pagination)"
+                            }
+                        },
+                        "required": [
+                            "data"
+                        ]
+                    }
+                ]
+            },
+            "ErrorResponse": {
+                "type": "object",
+                "description": "Error response",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "Error code: 9999=Error, 9000=Insufficient Credits"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "description": "Error message"
+                    },
+                    "data": {
+                        "type": "object",
+                        "description": "Extra data (optional)"
+                    }
+                },
+                "required": [
+                    "code",
+                    "msg"
+                ]
+            }
+        },
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization",
+                "description": "API Key Authorization, please include the Authorization field in the header"
+            }
+        }
+    },
+    "x-middlewares": {
+        "description": "Global middleware of the application",
+        "middlewares": [
+            "CorsMiddleware",
+            "AuthMiddleware"
+        ]
+    },
+    "x-timeout": {
+        "description": "Request timeout",
+        "timeout": "300000ms"
+    }
+}
