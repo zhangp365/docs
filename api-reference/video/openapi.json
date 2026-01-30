@@ -230,7 +230,7 @@
                             }
                         }
                     },
-                    "9000": {
+                    "402": {
                         "description": "Insufficient credits",
                         "content": {
                             "application/json": {

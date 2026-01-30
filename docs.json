@@ -8,6 +8,10 @@
     "dark": "#15803D"
   },
   "favicon": "/favicon.svg",
+  "openapi": [
+    "api-reference/image/openapi.json",
+    "api-reference/video/openapi.json"
+  ],
   "navigation": {
     "tabs": [
       {
@@ -58,15 +62,11 @@
           },
           {
             "group": "Image API",
-            "pages": [
-              "api-reference/image/openapi.json"
-            ]
+            "openapi": "api-reference/image/openapi.json"
           },
           {
             "group": "Video API",
-            "pages": [
-              "api-reference/video/openapi.json"
-            ]
+            "openapi": "api-reference/video/openapi.json"
           }
         ]
       }

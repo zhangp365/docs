@@ -106,7 +106,7 @@
                             }
                         }
                     },
-                    "9000": {
+                    "402": {
                         "description": "Insufficient credits",
                         "content": {
                             "application/json": {
@@ -141,7 +141,7 @@
                                 "properties": {
                                     "category": {
                                         "type": "string",
-                                        "description": "Category identifier: bananapro uses Gemini-3-Pro, nanobanana uses default model"
+                                        "description": "Category identifier: bananapro uses gemini-3-pro-image, nanobanana uses default"
                                     },
                                     "prompt": {
                                         "type": "string",

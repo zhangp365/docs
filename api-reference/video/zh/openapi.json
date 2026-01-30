@@ -230,7 +230,7 @@
               }
             }
           },
-          "9000": {
+          "402": {
             "description": "积分不足",
             "content": {
               "application/json": {

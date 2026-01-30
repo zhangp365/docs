@@ -106,7 +106,7 @@
               }
             }
           },
-          "9000": {
+          "402": {
             "description": "积分不足",
             "content": {
               "application/json": {
@@ -141,7 +141,7 @@
                 "properties": {
                   "category": {
                     "type": "string",
-                    "description": "分类标识：bananapro使用Gemini-3-Pro，nanobanana使用默认模型"
+                    "description": "分类标识：bananapro使用gemini-3-pro-image，nanobanana使用default"
                   },
                   "prompt": {
                     "type": "string",
