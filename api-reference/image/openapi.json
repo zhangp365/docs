@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8888",
+            "url": "https://api.tensorai.tensorslab.com",
             "description": "Development environment"
         }
     ],
@@ -39,7 +39,7 @@
                     "Image Generation"
                 ],
                 "summary": "BananaDuo Image Generation",
-                "description": "Generate images using ComfyUI's BananaDuo workflow, supporting 1-2 reference images",
+                "description": "Generate a photo of two people using the banana model, uploading 2 reference images.",
                 "operationId": "bananaDuo",
                 "requestBody": {
                     "required": false,

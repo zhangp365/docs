@@ -1,0 +1,7 @@
+/* 尝试强制侧边栏分组标题居中 */
+.sidebar-group-label,
+.group-label,
+div[class*="sidebar"] p,
+div[class*="sidebar"] span {
+    text-align: center !important;
+}

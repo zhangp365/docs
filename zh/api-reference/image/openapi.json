@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Images Service API",
+    "title": "图片服务 API",
     "description": "AI图片生成服务 API - 提供多种AI模型图片生成、任务查询和历史记录功能",
     "version": "1.0.0",
     "contact": {
@@ -10,25 +10,25 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8888",
+      "url": "https://api.tensorai.tensorslab.com",
       "description": "开发环境"
     }
   ],
   "tags": [
     {
-      "name": "Image Generation",
+      "name": "图片生成",
       "description": "图片生成相关接口"
     },
     {
-      "name": "Task Management",
+      "name": "任务管理",
       "description": "任务管理相关接口"
     },
     {
-      "name": "Query",
+      "name": "接口查询",
       "description": "查询相关接口"
     },
     {
-      "name": "Health",
+      "name": "健康检查",
       "description": "健康检查相关接口"
     }
   ],
@@ -36,11 +36,13 @@
     "/v1/images/bananaduo": {
       "post": {
         "tags": [
-          "Image Generation"
+          "图片生成"
         ],
-        "summary": "BananaDuo图片生成",
-        "description": "使用ComfyUI的BananaDuo工作流生成图片，支持1-2张参考图片",
+        "summary": "Banana双人",
+        "description": "使用 banana 模型生成两人合影，上传2张参考图片。",
         "operationId": "bananaDuo",
+        "x-mintlify-title": "Banana双人",
+        "x-mintlify-slug": "bananaduo",
         "requestBody": {
           "required": false,
           "content": {
@@ -127,11 +129,13 @@
     "/v1/images/nanobanana": {
       "post": {
         "tags": [
-          "Image Generation"
+          "图片生成"
         ],
-        "summary": "NanoBanana/BananaPro图片生成",
+        "summary": "NanoBanana/BananaPro",
         "description": "使用Google Vertex AI生成图片，支持Gemini模型",
         "operationId": "nanoBanana",
+        "x-mintlify-title": "NanoBanana/BananaPro",
+        "x-mintlify-slug": "nanobanana",
         "requestBody": {
           "required": false,
           "content": {
@@ -198,11 +202,13 @@
     "/v1/images/seedreamv4": {
       "post": {
         "tags": [
-          "Image Generation"
+          "图片生成"
         ],
-        "summary": "SeeDreamV4图片生成",
+        "summary": "SeeDreamV4",
         "description": "使用火山引擎SeeDream V4模型生成图片，支持批量生成",
         "operationId": "seeDreamV4",
+        "x-mintlify-title": "SeeDreamV4",
+        "x-mintlify-slug": "seedreamv4",
         "requestBody": {
           "required": false,
           "content": {
@@ -288,11 +294,13 @@
     "/v1/images/imagegenbytpl": {
       "post": {
         "tags": [
-          "Image Generation"
+          "图片生成"
         ],
-        "summary": "按模板生成图片",
+        "summary": "模板生成",
         "description": "根据指定的模板分类ID生成图片，支持SeeDream和NanoBanana模型",
         "operationId": "imageGenByTemplate",
+        "x-mintlify-title": "模板生成",
+        "x-mintlify-slug": "imagegenbytemplate",
         "requestBody": {
           "required": true,
           "content": {
@@ -353,11 +361,12 @@
     "/v1/images/infobytaskid": {
       "post": {
         "tags": [
-          "Task Management"
+          "任务管理"
         ],
-        "summary": "根据任务ID查询图片信息",
+        "summary": "任务信息查询",
         "description": "查询图片生成任务的状态和结果",
         "operationId": "infoByTaskId",
+        "x-mintlify-slug": "infobytaskid",
         "requestBody": {
           "required": true,
           "content": {
@@ -453,11 +462,12 @@
     "/v1/images/deleteimagestask": {
       "post": {
         "tags": [
-          "Task Management"
+          "任务管理"
         ],
         "summary": "删除图片任务",
         "description": "批量删除指定的图片生成任务",
         "operationId": "deleteImagesTask",
+        "x-mintlify-slug": "deleteimagestask",
         "requestBody": {
           "required": true,
           "content": {
@@ -512,11 +522,12 @@
     "/v1/images/getimageshistory": {
       "post": {
         "tags": [
-          "Query"
+          "接口查询"
         ],
         "summary": "获取图片历史",
         "description": "获取用户的图片生成历史记录，支持分页",
         "operationId": "getImagesHistory",
+        "x-mintlify-slug": "getimageshistory",
         "requestBody": {
           "required": false,
           "content": {
@@ -596,11 +607,12 @@
     "/v1/images/health": {
       "get": {
         "tags": [
-          "Health"
+          "健康检查"
         ],
         "summary": "健康检查",
         "description": "检查Images服务的健康状态，包括数据库连接状态",
         "operationId": "imagesHealth",
+        "x-mintlify-slug": "imageshealth",
         "responses": {
           "200": {
             "description": "请求成功",

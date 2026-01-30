@@ -11,76 +11,158 @@
     "default": "dark"
   },
   "favicon": "/logo.png",
+  "css": [
+    "global.css"
+  ],
   "openapi": [
     "api-reference/image/openapi.json",
-    "api-reference/video/openapi.json"
+    "api-reference/video/openapi.json",
+    "zh/api-reference/image/openapi.json",
+    "zh/api-reference/video/openapi.json"
   ],
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "Guides",
-        "groups": [
+        "language": "en",
+        "tabs": [
           {
-            "group": "Getting Started",
-            "pages": [
-              "index",
-              "quickstart"
+            "tab": "Guides",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "index",
+                  "quickstart"
+                ]
+              },
+              {
+                "group": "Image",
+                "pages": [
+                  "guides/image/introduction"
+                ]
+              },
+              {
+                "group": "Video",
+                "pages": [
+                  "guides/video/introduction"
+                ]
+              },
+              {
+                "group": "Member Center",
+                "pages": [
+                  "guides/member-center/introduction"
+                ]
+              },
+              {
+                "group": "My Space",
+                "pages": [
+                  "guides/myspace/introduction"
+                ]
+              },
+              {
+                "group": "Billing",
+                "pages": [
+                  "guides/billing/introduction"
+                ]
+              }
             ]
           },
           {
-            "group": "Image",
-            "pages": [
-              "guides/image/introduction"
-            ]
-          },
-          {
-            "group": "Video",
-            "pages": [
-              "guides/video/introduction"
-            ]
-          },
-          {
-            "group": "Member Center",
-            "pages": [
-              "guides/member-center/introduction"
-            ]
-          },
-          {
-            "group": "My Space",
-            "pages": [
-              "guides/myspace/introduction"
-            ]
-          },
-          {
-            "group": "Billing",
-            "pages": [
-              "guides/billing/introduction"
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "API Documentation",
+                "pages": [
+                  "api-reference/introduction"
+                ]
+              },
+              {
+                "group": "Image API",
+                "pages": [
+                  "api-reference/image/introduction"
+                ],
+                "openapi": "api-reference/image/openapi.json"
+              },
+              {
+                "group": "Video API",
+                "pages": [
+                  "api-reference/video/introduction"
+                ],
+                "openapi": "api-reference/video/openapi.json"
+              }
             ]
           }
         ]
       },
       {
-        "tab": "API Reference",
-        "groups": [
+        "language": "zh",
+        "tabs": [
           {
-            "group": "API Documentation",
-            "pages": [
-              "api-reference/introduction"
+            "tab": "使用指南",
+            "groups": [
+              {
+                "group": "开始使用",
+                "pages": [
+                  "zh/index",
+                  "zh/quickstart"
+                ]
+              },
+              {
+                "group": "图片生成",
+                "pages": [
+                  "zh/guides/image/introduction"
+                ]
+              },
+              {
+                "group": "视频生成",
+                "pages": [
+                  "zh/guides/video/introduction"
+                ]
+              },
+              {
+                "group": "会员中心",
+                "pages": [
+                  "zh/guides/member-center/introduction"
+                ]
+              },
+              {
+                "group": "我的空间",
+                "pages": [
+                  "zh/guides/myspace/introduction"
+                ]
+              },
+              {
+                "group": "账单管理",
+                "pages": [
+                  "zh/guides/billing/introduction"
+                ]
+              }
             ]
           },
           {
-            "group": "Image API",
-            "pages": [
-              "api-reference/image/introduction"
-            ],
-            "openapi": "api-reference/image/openapi.json"
-          },
-          {
-            "group": "Video API",
-            "pages": [
-              "api-reference/video/introduction"
-            ],
-            "openapi": "api-reference/video/openapi.json"
+            "tab": "API 文档",
+            "groups": [
+              {
+                "group": "API 介绍",
+                "pages": [
+                  "zh/api-reference/introduction"
+                ]
+              },
+              {
+                "group": "图片 API",
+                "pages": [
+                  "zh/api-reference/image/introduction"
+                ],
+                "openapi": "zh/api-reference/image/openapi.json"
+              },
+              {
+                "group": "视频 API",
+                "pages": [
+                  "zh/api-reference/video/introduction"
+                ],
+                "openapi": "zh/api-reference/video/openapi.json"
+              }
+            ]
           }
         ]
       }
@@ -91,11 +173,6 @@
           "anchor": "TensorAI",
           "href": "https://tensorai.tensorslab.com/",
           "icon": "house"
-        },
-        {
-          "anchor": "API",
-          "href": "/api-reference/introduction",
-          "icon": "code"
         }
       ]
     }
@@ -107,15 +184,11 @@
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:support@tensorai.tensorslab.com/"
+        "label": " ",
+        "icon": "gear",
+        "href": "https://tensorai.tensorslab.com/"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Console",
-      "href": "https://tensorai.tensorslab.com/"
-    }
+    ]
   },
   "contextual": {
     "options": [

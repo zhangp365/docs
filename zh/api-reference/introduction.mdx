@@ -1,0 +1,74 @@
+---
+title: 'API 介绍'
+description: 'TensorAI API - 构建强大的 AI 应用'
+---
+
+## 欢迎使用 TensorAI API
+
+TensorAI 提供强大的 AI 图片和视频生成 API。我们的 API 让您能够将前沿 AI 能力集成到您的应用程序中。
+
+## 可用 API
+
+<CardGroup cols={2}>
+  <Card
+    title="图片 API"
+    icon="image"
+    href="/zh/api-reference/image/introduction"
+  >
+    使用 Nano Banana 和 Seedream4 等模型进行文生图和图生图
+  </Card>
+  <Card
+    title="视频 API"
+    icon="video"
+    href="/zh/api-reference/video/introduction"
+  >
+    使用 Seedance 和 Veo3 模型创建专业视频，支持文生视频和图生视频
+  </Card>
+</CardGroup>
+
+## 身份认证
+
+所有 API 端点需要使用 Bearer 令牌进行身份验证。在请求头中包含您的 API 密钥：
+
+```json
+"Authorization": "Bearer YOUR_API_KEY"
+```
+
+<Note>
+  您可以从 [TensorAI 控制台](https://tensorai.tensorslab.com/) 生成 API 密钥。
+</Note>
+
+## 速率限制
+
+API 使用基于积分计费。每个模型有不同的积分消耗率：
+
+| 模型 | 类型 | 每次生成消耗积分 |
+|------|------|-----------------|
+| Nano Banana | 图片 | 5 积分 |
+| Seedream4 | 图片 | 10 积分 |
+| Seedance | 视频 (5秒) | 50 积分 |
+| Seedance | 视频 (10秒) | 100 积分 |
+| Veo3 | 视频 (5秒) | 80 积分 |
+| Veo3 | 视频 (10秒) | 160 积分 |
+
+## 快速开始
+
+1. **获取 API 密钥**：从 TensorAI 控制台获取
+2. **选择模型**：根据您的需求选择
+3. **发送 API 请求**：使用下方文档中的端点
+
+<Card
+  title="查看图片 API"
+  icon="image"
+  href="/zh/api-reference/image/introduction"
+>
+  浏览图片 API 端点
+</Card>
+
+<Card
+  title="查看视频 API"
+  icon="video"
+  href="/zh/api-reference/video/introduction"
+>
+  浏览视频 API 端点
+</Card>

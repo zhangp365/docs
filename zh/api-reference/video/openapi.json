@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Video Service API",
+    "title": "视频服务 API",
     "description": "视频生成服务 API - 提供多种AI视频生成、任务查询和历史记录功能",
     "version": "1.0.0",
     "contact": {
@@ -10,21 +10,21 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8888",
+      "url": "https://api.tensorai.tensorslab.com",
       "description": "开发环境"
     }
   ],
   "tags": [
     {
-      "name": "Video Generation",
+      "name": "视频生成",
       "description": "视频生成相关接口"
     },
     {
-      "name": "Task Management",
+      "name": "任务管理",
       "description": "任务管理相关接口"
     },
     {
-      "name": "Query",
+      "name": "接口查询",
       "description": "查询相关接口"
     }
   ],
@@ -32,11 +32,12 @@
     "/v1/video/videogenerate": {
       "post": {
         "tags": [
-          "Video Generation"
+          "视频生成"
         ],
         "summary": "通用视频生成",
         "description": "支持多种AI模型生成视频，包括Doubao、MiniMax、Vidu、ViduV2、Veo3Vertex等",
         "operationId": "videoGenerate",
+        "x-mintlify-slug": "videogenerate",
         "requestBody": {
           "required": false,
           "content": {
@@ -251,11 +252,12 @@
     "/v1/video/videogenbyscene": {
       "post": {
         "tags": [
-          "Video Generation"
+          "视频生成"
         ],
         "summary": "按场景生成视频",
         "description": "根据指定的场景分类ID生成视频，支持故事模式和场景模式",
         "operationId": "videoGenByScene",
+        "x-mintlify-slug": "videogenbyscene",
         "requestBody": {
           "required": false,
           "content": {
@@ -337,11 +339,12 @@
     "/v1/video/videogenbytpl": {
       "post": {
         "tags": [
-          "Video Generation"
+          "视频生成"
         ],
         "summary": "按模板生成视频",
         "description": "根据指定的模板分类ID生成视频",
         "operationId": "videoGenByTpl",
+        "x-mintlify-slug": "videogenbytpl",
         "requestBody": {
           "required": false,
           "content": {
@@ -403,11 +406,12 @@
     "/v1/video/tlwangenerate": {
       "post": {
         "tags": [
-          "Video Generation"
+          "视频生成"
         ],
         "summary": "TLWan视频生成",
         "description": "使用TLWan22模型生成视频，支持LoRA和自定义分辨率",
         "operationId": "tlwanGenerate",
+        "x-mintlify-slug": "tlwangenerate",
         "requestBody": {
           "required": true,
           "content": {
@@ -482,11 +486,12 @@
     "/v1/video/infobytaskid": {
       "post": {
         "tags": [
-          "Task Management"
+          "任务管理"
         ],
-        "summary": "根据任务ID查询信息",
+        "summary": "视频任务查询",
         "description": "查询视频处理任务的状态和结果。支持获取详细信息",
         "operationId": "infoByTaskId",
+        "x-mintlify-slug": "infobytaskid",
         "requestBody": {
           "required": true,
           "content": {
@@ -583,11 +588,12 @@
     "/v1/video/deletevideotask": {
       "post": {
         "tags": [
-          "Task Management"
+          "任务管理"
         ],
         "summary": "删除视频任务",
         "description": "批量删除指定的视频任务",
         "operationId": "deleteVideoTask",
+        "x-mintlify-slug": "deletevideotask",
         "requestBody": {
           "required": true,
           "content": {
@@ -651,11 +657,12 @@
     "/v1/video/getvideohistory": {
       "post": {
         "tags": [
-          "Query"
+          "接口查询"
         ],
         "summary": "获取视频历史",
         "description": "获取用户的视频生成历史记录，支持分页",
         "operationId": "getVideoHistory",
+        "x-mintlify-slug": "getvideohistory",
         "requestBody": {
           "required": false,
           "content": {
@@ -733,11 +740,12 @@
     "/v1/video/getcategory": {
       "get": {
         "tags": [
-          "Query"
+          "接口查询"
         ],
         "summary": "获取场景分类",
         "description": "获取可用的视频生成场景分类列表",
         "operationId": "getCategory",
+        "x-mintlify-slug": "getcategory",
         "responses": {
           "200": {
             "description": "请求成功",
